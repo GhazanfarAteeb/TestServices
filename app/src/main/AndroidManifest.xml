@@ -32,7 +32,6 @@
 			</intent-filter>
 		</activity>
 		<service
-			android:process=":myService"
 			android:name=".MyService"
 			android:stopWithTask="false"/>
 	</application>

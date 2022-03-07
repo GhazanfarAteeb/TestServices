@@ -13,19 +13,17 @@ import android.os.Looper;
 import android.os.SystemClock;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 
-public class MyService extends Service implements LocationListener {
+public class MyService extends Service {
     private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 3000;
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest locationRequest;
@@ -104,22 +102,17 @@ public class MyService extends Service implements LocationListener {
     }
 
     @Override
-    public void onLocationChanged(@NonNull Location location) {
-        System.out.println(location);
-    }
+    public void onTaskRemoved(Intent rootIntent){
+        Intent restartServiceIntent = new Intent(getApplicationContext(), this.getClass());
+        restartServiceIntent.setPackage(getPackageName());
 
-//    @Override
-//    public void onTaskRemoved(Intent rootIntent){
-//        Intent restartServiceIntent = new Intent(getApplicationContext(), this.getClass());
-//        restartServiceIntent.setPackage(getPackageName());
-//
-//        PendingIntent restartServicePendingIntent = PendingIntent.getService(getApplicationContext(), 1, restartServiceIntent, PendingIntent.FLAG_ONE_SHOT);
-//        AlarmManager alarmService = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-//        alarmService.set(
-//                AlarmManager.ELAPSED_REALTIME,
-//                SystemClock.elapsedRealtime() + 10,
-//                restartServicePendingIntent);
-//
-//        super.onTaskRemoved(rootIntent);
-//    }
+        PendingIntent restartServicePendingIntent = PendingIntent.getService(getApplicationContext(), 1, restartServiceIntent, PendingIntent.FLAG_ONE_SHOT);
+        AlarmManager alarmService = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+        alarmService.set(
+                AlarmManager.ELAPSED_REALTIME,
+                SystemClock.elapsedRealtime() + 10,
+                restartServicePendingIntent);
+
+        super.onTaskRemoved(rootIntent);
+    }
 }
