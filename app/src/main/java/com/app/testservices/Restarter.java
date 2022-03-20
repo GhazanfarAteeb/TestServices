@@ -19,4 +19,9 @@ public class Restarter extends BroadcastReceiver {
             context.startService(new Intent(context, MyService.class));
         }
     }
+
+    public void stopService() {
+
+    }
+
 }

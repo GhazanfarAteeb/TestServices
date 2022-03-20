@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.app.testservices">
+	
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
 	<uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
-	<uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- To auto-complete the email text field in the login form with the user's emails -->
-	<uses-permission android:name="android.permission.INTERNET" /> <!-- if you want to load images from a file OR from the internet -->
+	<uses-permission android:name="android.permission.INTERNET" />
+	
 	<application
 		android:name=".MyChannel"
 		android:allowBackup="true"
@@ -14,14 +17,17 @@
 		android:roundIcon="@mipmap/ic_launcher_round"
 		android:supportsRtl="true"
 		android:theme="@style/Theme.TestServices">
+		
 		<receiver
-			android:name="Restarter"
+			android:name=".Restarter"
 			android:enabled="true"
-			android:exported="true">
+			android:exported="true"
+			android:label="RestartServiceWhenStopped">
 			<intent-filter>
 				<action android:name="restartservice" />
 			</intent-filter>
 		</receiver>
+		
 		<activity
 			android:name=".MainActivity"
 			android:exported="true">
@@ -31,9 +37,16 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
+		
 		<service
 			android:name=".MyService"
-			android:stopWithTask="false"/>
+			android:enabled="true"
+			android:exported="false"
+			android:foregroundServiceType="location">
+			<intent-filter>
+				<action android:name="com.app.testservices.GPSService" />
+			</intent-filter>
+		</service>
 	</application>
 
 </manifest>

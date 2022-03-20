@@ -7,7 +7,7 @@ import android.os.Build;
 
 public class MyChannel extends Application {
     public static final String CHANNEL_ID = "serviceChannel";
-
+    public static NotificationManager manager;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -20,8 +20,9 @@ public class MyChannel extends Application {
                     "Notification service",
                     NotificationManager.IMPORTANCE_DEFAULT
             );
-            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager = getSystemService(NotificationManager.class);
             manager.createNotificationChannel(serviceChannel);
         }
     }
+
 }
