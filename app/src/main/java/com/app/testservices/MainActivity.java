@@ -30,6 +30,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -79,21 +80,6 @@ public class MainActivity extends AppCompatActivity {
                         });
                         builder.show();
                     }
-                    else {
-                        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                        builder.setTitle("Functionality limited");
-                        builder.setMessage("Since background location access has not been granted, this app will not be able to discover beacons in the background.  Please go to Settings -> Applications -> Permissions and grant background location access to this app.");
-                        builder.setPositiveButton(android.R.string.ok, null);
-                        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-
-                            @Override
-                            public void onDismiss(DialogInterface dialog) {
-                            }
-
-                        });
-                        builder.show();
-                    }
-
                 }
             } else {
                 if (this.shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
@@ -127,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
                     Manifest.permission.ACCESS_COARSE_LOCATION,
                     Manifest.permission.ACCESS_FINE_LOCATION,
             }, PERMISSION_REQUEST_FINE_LOCATION);
+           /*
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                         == PackageManager.PERMISSION_GRANTED) {
@@ -188,6 +175,7 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             }
+*/
 
             return;
         }
@@ -213,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
+/*
         switch (requestCode) {
             case PERMISSION_REQUEST_FINE_LOCATION: {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -296,6 +284,38 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         // If request is cancelled, the result arrays are empty.
+
+ */
+        switch (requestCode) {
+            case PERMISSION_REQUEST_FINE_LOCATION:
+                if (grantResults.length > 0 && PackageManager.PERMISSION_GRANTED == grantResults[0]) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setTitle("Functionality limited");
+                        builder.setMessage("Since background location access has not been granted, this app will not be able to discover beacons in the background.  Please go to Settings -> Applications -> Permissions and grant background location access to this app.");
+                        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, PERMISSION_REQUEST_BACKGROUND_LOCATION);
+
+                            }
+                        });
+                        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                            }
+
+                        });
+                        builder.show();
+                    }
+                }
+                break;
+            case PERMISSION_REQUEST_BACKGROUND_LOCATION:
+                if (grantResults.length > 0 && PackageManager.PERMISSION_GRANTED == grantResults[0]) {
+                    Toast.makeText(MainActivity.this, "Background Permission Granted", Toast.LENGTH_SHORT).show();
+                }
+        }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
     }
@@ -308,6 +328,7 @@ public class MainActivity extends AppCompatActivity {
 //                    .setFastestInterval(0)
                     .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 ////
+            /*
 //            LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
 //            LocationServices.getSettingsClient(this).checkLocationSettings(builder.build())
 //                    .addOnSuccessListener(this, (LocationSettingsResponse response) -> {
@@ -359,6 +380,7 @@ public class MainActivity extends AppCompatActivity {
 //                    }
 //                }
 //            });
+            */
         }
     }
 

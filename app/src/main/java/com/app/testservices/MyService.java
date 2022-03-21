@@ -13,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.PowerManager;
@@ -44,6 +45,7 @@ public class MyService extends Service {
     LocationRequest mLocationRequest;
 
     private LocationSettingsRequest locationSettingsRequest;
+
     protected void createLocationRequest() {
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(INTERVAL);
@@ -163,7 +165,12 @@ public class MyService extends Service {
         public void onLocationResult(LocationResult locationResult) {
             super.onLocationResult(locationResult);
             Location currentLocation = locationResult.getLastLocation();
-            Log.d("Locations", currentLocation.getLatitude() + "," + currentLocation.getLongitude());
+            Log.d(null, "================ USER DETAILS ================");
+            Log.d("CURRENT_LOCATION : ", currentLocation.getLatitude() + "," + currentLocation.getLongitude());
+            Log.d("CURRENT_SPEED : ", String.valueOf(currentLocation.getSpeed()));
+            Log.d("CURRENT_ALTITUDE : ", String.valueOf(currentLocation.getAltitude()));
+            Log.d("CURRENT_ACCURACY : ", String.valueOf(currentLocation.getAccuracy()));
+            Log.d(null, "==============================================");
             //Share/Publish Location
             builder.setContentText(currentLocation.getLatitude() + "," + currentLocation.getLongitude());
             Notification nm = builder.build();
