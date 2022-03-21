@@ -13,7 +13,6 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Binder;
-import android.os.Build;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.PowerManager;
@@ -44,7 +43,6 @@ public class MyService extends Service {
     private static final long FASTEST_INTERVAL = 0;
     LocationRequest mLocationRequest;
     Notification notification;
-    private LocationSettingsRequest locationSettingsRequest;
 
     protected void createLocationRequest() {
         mLocationRequest = new LocationRequest();
@@ -65,6 +63,7 @@ public class MyService extends Service {
 //                            BitmapDescriptorFactory.fromBitmap(getBitmapFromVectorDrawable(context, R.drawable.ic_maps_arrow
 //                            ))
 //                    );
+
             Log.d(null, "================ USER DETAILS ================");
             Log.d("CURRENT_LOCATION : ", location.getLatitude() + "," + location.getLongitude());
             Log.d("CURRENT_SPEED : ", String.valueOf(location.getSpeed()));
@@ -166,12 +165,13 @@ public class MyService extends Service {
         public void onLocationResult(LocationResult locationResult) {
             super.onLocationResult(locationResult);
             Location currentLocation = locationResult.getLastLocation();
-            Log.d(null, "================ USER DETAILS ================");
-            Log.d("CURRENT_LOCATION : ", currentLocation.getLatitude() + "," + currentLocation.getLongitude());
-            Log.d("CURRENT_SPEED : ", String.valueOf(currentLocation.getSpeed()));
-            Log.d("CURRENT_ALTITUDE : ", String.valueOf(currentLocation.getAltitude()));
-            Log.d("CURRENT_ACCURACY : ", String.valueOf(currentLocation.getAccuracy()));
-            Log.d(null, "==============================================");
+            Log.d("Location", currentLocation.toString());
+//            Log.d(null, "================ USER DETAILS ================");
+//            Log.d("CURRENT_LOCATION : ", currentLocation.getLatitude() + "," + currentLocation.getLongitude());
+//            Log.d("CURRENT_SPEED : ", String.valueOf(currentLocation.getSpeed()));
+//            Log.d("CURRENT_ALTITUDE : ", String.valueOf(currentLocation.getAltitude()));
+//            Log.d("CURRENT_ACCURACY : ", String.valueOf(currentLocation.getAccuracy()));
+//            Log.d(null, "==============================================");
             //Share/Publish Location
             builder.setContentText(currentLocation.getLatitude() + "," + currentLocation.getLongitude());
             notification = builder.build();
@@ -206,7 +206,7 @@ public class MyService extends Service {
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         client.removeLocationUpdates(locationCallback);
-
+        stopSelf();
         Log.d("STOP_SERVICE", "TRYING TO STOP SERVICE");
         super.onTaskRemoved(rootIntent);
     }
