@@ -43,7 +43,7 @@ public class MyService extends Service {
     private static final long INTERVAL = 0;
     private static final long FASTEST_INTERVAL = 0;
     LocationRequest mLocationRequest;
-
+    Notification notification;
     private LocationSettingsRequest locationSettingsRequest;
 
     protected void createLocationRequest() {
@@ -100,7 +100,8 @@ public class MyService extends Service {
         client = LocationServices.getFusedLocationProviderClient(getApplicationContext());
         createLocationRequest();
         startLocationUpdates();
-        startForeground(ID, getNotification());
+        notification = getNotification();
+        startForeground(ID, notification);
         return START_NOT_STICKY;
     }
 
@@ -173,8 +174,8 @@ public class MyService extends Service {
             Log.d(null, "==============================================");
             //Share/Publish Location
             builder.setContentText(currentLocation.getLatitude() + "," + currentLocation.getLongitude());
-            Notification nm = builder.build();
-            startForeground(2, nm);
+            notification = builder.build();
+            startForeground(ID, notification);
         }
     };
 
@@ -194,4 +195,19 @@ public class MyService extends Service {
                 this.locationCallback, Looper.getMainLooper());
     }
 
+    @Override
+    public void onDestroy() {
+        client.removeLocationUpdates(locationCallback);
+        Log.d("STOP_SERVICE", "TRYING TO STOP SERVICE FROM ON DESTROY");
+        stopSelf();
+        super.onDestroy();
+    }
+
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        client.removeLocationUpdates(locationCallback);
+
+        Log.d("STOP_SERVICE", "TRYING TO STOP SERVICE");
+        super.onTaskRemoved(rootIntent);
+    }
 }

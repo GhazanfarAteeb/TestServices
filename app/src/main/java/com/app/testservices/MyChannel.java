@@ -22,6 +22,7 @@ public class MyChannel extends Application {
             );
             manager = getSystemService(NotificationManager.class);
             manager.createNotificationChannel(serviceChannel);
+            manager.cancelAll();
         }
     }
 

@@ -10,6 +10,7 @@ import androidx.core.app.ActivityCompat;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
     FusedLocationProviderClient mFusedLocationClient;
     public static final String TAG = "MainActivity.java";
+    Intent serviceIntent;
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
@@ -183,8 +185,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void startService(View view) {
         String input = etInput.getText().toString();
-        Intent serviceIntent = new Intent(this, MyService.class);
-        serviceIntent.putExtra("input", input);
+        serviceIntent = new Intent(this, MyService.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             MainActivity.this.startForegroundService(new Intent(MainActivity.this, MyService.class));
         } else {
@@ -195,8 +196,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void stopService(View view) {
-        Intent serviceIntent = new Intent(this, MyService.class);
+        unbindService(GPSServiceConnection);
         stopService(serviceIntent);
+
     }
 
     @Override

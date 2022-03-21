@@ -17,17 +17,6 @@
 		android:roundIcon="@mipmap/ic_launcher_round"
 		android:supportsRtl="true"
 		android:theme="@style/Theme.TestServices">
-		
-		<receiver
-			android:name=".Restarter"
-			android:enabled="true"
-			android:exported="true"
-			android:label="RestartServiceWhenStopped">
-			<intent-filter>
-				<action android:name="restartservice" />
-			</intent-filter>
-		</receiver>
-		
 		<activity
 			android:name=".MainActivity"
 			android:exported="true">
